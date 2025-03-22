@@ -94,3 +94,55 @@ class LinkedList:
             afterNode.next = newNode
             if afterNode == self.tail:
                 self.tail = newNode
+
+#1.7. Напишите проверочные тесты для каждого из предыдущих заданий.
+def test_linked_list():
+    lst = LinkedList()
+
+    # Тест 1: Добавление элементов
+    lst.add_in_tail(Node(1))
+    lst.add_in_tail(Node(2))
+    lst.add_in_tail(Node(3))
+    assert lst.head.value == 1, "Ошибка: head должен быть 1"
+    assert lst.tail.value == 3, "Ошибка: tail должен быть 3"
+    assert lst.len() == 3, "Ошибка: длина списка должна быть 3"
+
+    # Тест 2: Удаление первого элемента
+    lst.delete(1)
+    assert lst.head.value == 2, "Ошибка: head должен быть 2"
+    assert lst.len() == 2, "Ошибка: длина списка должна быть 2"
+
+    # Тест 3: Удаление всех элементов с определенным значением
+    lst.add_in_tail(Node(2))
+    lst.delete(2, all=True)
+    assert lst.head.value == 3, "Ошибка: head должен быть 3"
+    assert lst.tail.value == 3, "Ошибка: tail должен быть 3"
+    assert lst.len() == 1, "Ошибка: длина списка должна быть 1"
+
+    # Тест 4: Очистка списка
+    lst.clean()
+    assert lst.head is None, "Ошибка: head должен быть None"
+    assert lst.tail is None, "Ошибка: tail должен быть None"
+    assert lst.len() == 0, "Ошибка: длина списка должна быть 0"
+
+    # Тест 5: Поиск всех узлов с определенным значением
+    lst.add_in_tail(Node(1))
+    lst.add_in_tail(Node(2))
+    lst.add_in_tail(Node(2))
+    found_nodes = lst.find_all(2)
+    assert len(found_nodes) == 2, "Ошибка: должно быть найдено 2 узла"
+    for node in found_nodes:
+        assert node.value == 2, "Ошибка: найденный узел должен иметь значение 2"
+
+    # Тест 6: Вставка узла
+    lst.insert(lst.find(1), Node(0))
+    assert lst.head.value == 1, "Ошибка: head должен быть 1"
+    assert lst.head.next.value == 0, "Ошибка: следующий узел должен быть 0"
+    assert lst.len() == 4, "Ошибка: длина списка должна быть 4"
+
+    # Тест 7: Вставка в пустой список
+    empty_lst = LinkedList()
+    empty_lst.insert(None, Node(10))
+    assert empty_lst.head.value == 10, "Ошибка: head должен быть 10"
+    assert empty_lst.tail.value == 10, "Ошибка: tail должен быть 10"
+    assert empty_lst.len() == 1, "Ошибка: длина списка должна быть 1"
