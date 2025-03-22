@@ -146,3 +146,12 @@ def test_linked_list():
     assert empty_lst.head.value == 10, "Ошибка: head должен быть 10"
     assert empty_lst.tail.value == 10, "Ошибка: tail должен быть 10"
     assert empty_lst.len() == 1, "Ошибка: длина списка должна быть 1"
+
+
+
+
+
+
+
+
+
