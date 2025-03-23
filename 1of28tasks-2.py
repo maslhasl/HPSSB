@@ -153,4 +153,5 @@ result = sum_linked_lists(list1, list2)
 assert result is not None, "Ошибка: результат не должен быть None"
 assert result.len() == 0, "Ошибка: результат должен быть пустым списком"
 
-print("Все тесты прошли успешно!")
+
+
