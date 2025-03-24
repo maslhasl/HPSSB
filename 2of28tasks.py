@@ -37,7 +37,7 @@ class LinkedList2:
             node = node.next
         return result
 
-## 2.3. Добавьте в класс LinkedList2 метод удаления одного узла по его значению - delete(val, all=False)
+## 2.3. и 2.4 Добавьте в класс LinkedList2 метод удаления одного узла по его значению - delete(val, all=False)
 #где флажок all=False по умолчанию -- удаляем только первый нашедшийся элемент. 
 
 #Текстовое описание метода
