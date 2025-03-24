@@ -66,6 +66,34 @@ class LinkedList2:
           node = node_next 
         else: #случай когда удаления не произойдет, а произойдет переход к следующему элементу
           node = node.next  
+    def clean(self):
+        self.head = None
+        self.tail = None
+        
+
+    def len(self):
+        count = 0
+        node = self.head
+        while node is not None:
+            count+=1
+            node = node.next
+        return count
+
+    def insert(self, afterNode, newNode):
+        pass # здесь будет ваш код
+
+    def add_in_head(self, newNode):
+        #установим связь с головой
+        newNode.next = self.head
+        #укажем для newNode prev как для головы
+        newNode.prev = None
+        #Случай непустого списка
+        if self.head is not None:
+            self.head.prev = newNode
+        #Случай пустого списка
+        else:
+            self.tail = newNode
+        self.head = NewNode   
 
 
 
