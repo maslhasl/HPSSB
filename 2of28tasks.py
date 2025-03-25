@@ -80,8 +80,19 @@ class LinkedList2:
         return count
 
     def insert(self, afterNode, newNode):
-        pass # здесь будет ваш код
-
+        #Используя метод add_in_tail упростим случай когда: (afterNode = None и список пустой) и (afterNode = None и список не пустой)
+        if afterNode is None:
+            self.add_in_tail(newNode)
+            return
+        #Случай когда список не пустой и добавляем узел между элементами
+        newNode.next = afterNode.next # связываем новый со следующим за afterNode
+        newNode.prev = afterNode # связываем новый с afterNode
+        afterNode.next = newNode # обрубаем связь между afterNode и прежним следующим
+        if newNode.next is not None: # newNode не хвост
+            newNode.next.prev = newNode #связываем ранее следующий за afterNode c newNode
+        else: # newNode хвост
+            self.tail = newNode # устанавливаем соответствие хвоста newNode-е
+    
     def add_in_head(self, newNode):
         #установим связь с головой
         newNode.next = self.head
