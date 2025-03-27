@@ -60,6 +60,8 @@ class LinkedList2:
                     node.next.prev = node.prev
                 else: #Случай конца списка
                     self.tail = node.prev
+                if self.head is None:
+                    break
                 if not all: #Проверка: удалять первый найденный по значению узел или все 
                     break
                 node = node_next #Присвоение переменной следующего по списку значения 
@@ -69,6 +71,8 @@ class LinkedList2:
 #Если afterNode = None и список пустой, добавьте новый элемент первым в списке.
 #Если afterNode = None и список непустой, добавьте новый элемент последним в списке.
     def insert(self, afterNode, newNode):
+        if newNode is None:
+            return
         #Используя метод add_in_tail упростим случай когда: (afterNode = None и список пустой) и (afterNode = None и список не пустой)
         if afterNode is None:
             self.add_in_tail(newNode)
@@ -112,6 +116,81 @@ class LinkedList2:
         return count
 
 #2.9. Напишите проверочные тесты для каждого из предыдущих заданий. 
+
+def test_linked_list2():
+    
+    # Тест 1: Создание и добавление элементов
+    lst = LinkedList2()
+    n1, n2, n3 = Node(1), Node(2), Node(3)
+    lst.add_in_tail(n1)
+    lst.add_in_tail(n2)
+    lst.add_in_tail(n3)
+    assert lst.head == n1
+    assert lst.tail == n3
+    assert lst.len() == 3
+    print("Тест 1 пройден: добавление в хвост")
+
+    # Тест 2: Поиск элементов
+    assert lst.find(2) == n2
+    assert lst.find(99) is None
+    assert lst.find_all(2) == [n2]
+    print("Тест 2 пройден: поиск элементов")
+
+    # Тест 3: Удаление одного элемента
+    lst.delete(2)
+    assert lst.head == n1
+    assert lst.tail == n3
+    assert n1.next == n3
+    assert n3.prev == n1
+    assert lst.len() == 2
+    print("Тест 3 пройден: удаление одного элемента")
+
+    # Тест 4: Удаление всех элементов
+    lst.add_in_tail(Node(2))
+    lst.add_in_tail(Node(2))
+    lst.delete(2, all=True)
+    assert lst.head == n1
+    assert lst.tail == n3
+    assert lst.len() == 2
+    print("Тест 4 пройден: удаление всех вхождений")
+
+    # Тест 5: Удаление единственного элемента
+    lst2 = LinkedList2()
+    n = Node(1)
+    lst2.add_in_tail(n)
+    lst2.delete(1)
+    assert lst2.head is None
+    assert lst2.tail is None
+    print("Тест 5 пройден: удаление единственного элемента")
+
+    # Тест 6: Вставка элементов
+    lst.insert(n1, Node(1.5))
+    assert lst.head.next.value == 1.5
+    lst.insert(None, Node(4))  # Вставка в конец
+    assert lst.tail.value == 4
+    print("Тест 6 пройден: вставка элементов")
+
+    # Тест 7: Вставка в голову
+    lst.add_in_head(Node(0))
+    assert lst.head.value == 0
+    assert lst.head.next == n1
+    print("Тест 7 пройден: вставка в голову")
+
+    # Тест 8: Очистка списка
+    lst.clean()
+    assert lst.head is None
+    assert lst.tail is None
+    assert lst.len() == 0
+    print("Тест 8 пройден: очистка списка")
+
+    # Тест 9: Вставка в пустой список
+    lst.insert(None, Node(10))
+    assert lst.head.value == 10
+    assert lst.tail.value == 10
+    print("Тест 9 пройден: вставка в пустой список")
+
+
+
 
   
 
