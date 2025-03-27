@@ -12,14 +12,14 @@ class LinkedList2:
         self.tail = None
 
     def add_in_tail(self, item):
-        if self.head is None: #То есть список пустой
-            self.tail = item
+        if self.head is None:
+            self.head = item
             item.prev = None
             item.next = None
-        else:                  #Список не пустой
+        else:
             self.tail.next = item
             item.prev = self.tail
-        self.tail = item       #После удаления связей, присваиваем хвосту новое значение
+        self.tail = item
 
 #2.1. Добавьте в класс LinkedList2 метод поиска первого узла по его значению.
     def find(self, val):
