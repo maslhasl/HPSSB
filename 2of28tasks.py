@@ -19,7 +19,7 @@ class LinkedList2:
         else:                  #Список не пустой
             self.tail.next = item
             item.prev = self.tail
-        self.tail = item       #После удаления связей, переприсваиваем хвосту новое значение
+        self.tail = item       #После удаления связей, присваиваем хвосту новое значение
 
 #2.1. Добавьте в класс LinkedList2 метод поиска первого узла по его значению.
     def find(self, val):
@@ -30,8 +30,7 @@ class LinkedList2:
             node = node.next
         return None
 
-
-
+# 2.2. Добавьте в класс LinkedList2 метод поиска всех узлов по конкретному значению (возвращается список найденных узлов).
     def find_all(self, val):
         result = []
         node = node.head
@@ -40,48 +39,35 @@ class LinkedList2:
                 result.append(node)
             node = node.next
 
-# 2.2. Добавьте в класс LinkedList2 метод поиска всех узлов по конкретному значению (возвращается список найденных узлов).
-# 2.3. и 2.4 Добавьте в класс LinkedList2 метод удаления одного узла по его значению - delete(val, all=False)
+#2.3. и 2.4 Добавьте в класс LinkedList2 метод удаления одного узла по его значению - delete(val, all=False)
 #где флажок all=False по умолчанию -- удаляем только первый нашедшийся элемент. 
-
-     def delete(self, val, all=False):
-      #Введем переменную текущего значения узла, назовем node и присвоим значение головы списка.
-         node = self.head
-      #С помощью цикла while зациклим прохождение по узлам списка
-      while node is not None:
-        #Введем условие по которому будет производится удаление элемента,в обратном случае переход к следующему узлу
-        if node.value == val: #условие выполения удаления
-          #введем переменную которая будет ссылаться на следующий узел относительно текущего в цикле, чтобы в дальнейшем использовать ее
-          node_next = node.next 
-          #Связи с предыдущим узлом
-          if node.prev is not None: #Случай не начала списка (есть предыдущий узел)
-            node.prev.next = node.next
-          else:                     #(предыдущего узла нет, это голова списка)
-            self.head = node.next
-          #Связи со следующим узлом
-          if node.next is not None: #Случай не конца списка (есть следующий узел)
-            node.next.prev = node.prev
-          else:                     #(следующего узла нет, это хвост списка)             
-            self.tail = node.prev   
-          if not all: #Если true то завершаем цикл, то есть удалили один элемент. Если наоборот то продолжаем нещадно удалять элементы
-            return
-          # Переходим к следующему узлу в случае когда all=True
-          node = node_next 
-        else: #случай когда удаления не произойдет, а произойдет переход к следующему элементу
-          node = node.next  
-    def clean(self):
-        self.head = None
-        self.tail = None
-        
-
-    def len(self):
-        count = 0
+    def delete(self, val, all=False):
+        #Введем переменную текущего узла
         node = self.head
+        #Для прохождения по всем узлам списка воспользуемся циклом while
         while node is not None:
-            count+=1
-            node = node.next
-        return count
+            #Условие выполнения удаления
+            if node.value == val:
+                node_next = node.next #Введем переменную для сохранения следующего узла
+                #Связи с предыдущим узлом
+                if node.prev is not None: #Случай не начала списка
+                    node.prev.next = node.next
+                else:                     #Случай начала списка
+                    self.head = node.next
+                #Связи со следующим узлом
+                if node.next is not None: #Случай не конца списка
+                    node.next.prev = node.prev
+                else: #Случай конца списка
+                    self.tail = node.prev
+                if not all: #Проверка: удалять первый найденный по значению узел или все 
+                    return
+                node = node_next #Присвоение переменной следующего по списку значения 
 
+            else: #Случай когда условие удаления не выполнено
+                node = node.next
+#2.5. Добавьте в класс LinkedList2 метод вставки узла после заданного узла - insert(afterNode, newNode)
+#Если afterNode = None и список пустой, добавьте новый элемент первым в списке.
+#Если afterNode = None и список непустой, добавьте новый элемент последним в списке.
     def insert(self, afterNode, newNode):
         #Используя метод add_in_tail упростим случай когда: (afterNode = None и список пустой) и (afterNode = None и список не пустой)
         if afterNode is None:
@@ -95,7 +81,9 @@ class LinkedList2:
             newNode.next.prev = newNode #связываем ранее следующий за afterNode c newNode
         else: # newNode хвост
             self.tail = newNode # устанавливаем соответствие хвоста newNode-е
-    
+
+#2.6. Добавьте в класс LinkedList2 метод вставки узла самым первым элементом.
+#add_in_head(newNode)
     def add_in_head(self, newNode):
         #установим связь с головой
         newNode.next = self.head
@@ -107,7 +95,24 @@ class LinkedList2:
         #Случай пустого списка
         else:
             self.tail = newNode
-        self.head = NewNode   
+        self.head = NewNode
+
+#2.7. Добавьте в класс LinkedList2 метод очистки всего содержимого (создание пустого списка) -- clean()
+    def clean(self):
+        self.head = None
+        self.tail = None
+        
+#2.8. Добавьте в класс LinkedList2 метод вычисления текущей длины списка -- len()
+    def len(self):
+        count = 0
+        node = self.head
+        while node is not None:
+            count+=1
+            node = node.next
+        return count
+
+
+  
 
 
 
