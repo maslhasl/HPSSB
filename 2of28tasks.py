@@ -77,8 +77,10 @@ class LinkedList2:
     # Вставка в конец списка
         if afterNode is None:
             if self.head is None:  # Список пуст
-                self.head = self.tail = newNode
-                newNode.prev = newNode.next = None
+                self.head = newNode
+                self.tail = newNode
+                newNode.prev = None
+                newNode.next = None
             else:  # Вставка в конец непустого списка
                 newNode.prev = self.tail
                 newNode.next = None
