@@ -119,18 +119,11 @@ class LinkedList2:
         
 #2.8. Добавьте в класс LinkedList2 метод вычисления текущей длины списка -- len()
     def len(self):
-        count = 0
         node = self.head
-        max_nodes = 1000  # Защита от зацикливания
-    
-        while node is not None and count <= max_nodes:
-            if not isinstance(node, Node):  # Проверка типа
-                raise ValueError("Нарушена структура списка")
-            count += 1
+        count=0
+        while node is not None:
+            count+=1
             node = node.next
-    
-        if count > max_nodes:
-            raise ValueError("Возможен цикл в списке")
         return count
 
 
