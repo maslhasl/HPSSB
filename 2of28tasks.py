@@ -70,21 +70,33 @@ class LinkedList2:
 #2.5. Добавьте в класс LinkedList2 метод вставки узла после заданного узла - insert(afterNode, newNode)
 #Если afterNode = None и список пустой, добавьте новый элемент первым в списке.
 #Если afterNode = None и список непустой, добавьте новый элемент последним в списке.
-    def insert(self, afterNode, newNode):
-        if newNode is None:
-            return
-        #Используя метод add_in_tail упростим случай когда: (afterNode = None и список пустой) и (afterNode = None и список не пустой)
-        if afterNode is None:
-            self.add_in_tail(newNode)
-            return
-        #Случай когда список не пустой и добавляем узел между элементами
-        newNode.next = afterNode.next # связываем новый со следующим за afterNode
-        newNode.prev = afterNode # связываем новый с afterNode
-        afterNode.next = newNode # обрубаем связь между afterNode и прежним следующим
-        if newNode.next is not None: # newNode не хвост
-            newNode.next.prev = newNode #связываем ранее следующий за afterNode c newNode
-        else: # newNode хвост
-            self.tail = newNode # устанавливаем соответствие хвоста newNode-е
+def insert(self, afterNode, newNode):
+    if newNode is None:
+        return
+    
+    # Обработка случая when afterNode is None
+    if afterNode is None:
+        if self.head is None:  # Список пустой - делаем newNode единственным элементом
+            self.head = newNode
+            self.tail = newNode
+            newNode.prev = None
+            newNode.next = None
+        else:  # Список не пустой - добавляем в конец
+            newNode.prev = self.tail
+            newNode.next = None
+            self.tail.next = newNode
+            self.tail = newNode
+        return
+    
+    # Обработка обычной вставки после существующего узла
+    newNode.prev = afterNode
+    newNode.next = afterNode.next
+    afterNode.next = newNode
+    
+    if newNode.next is not None:
+        newNode.next.prev = newNode
+    else:  # Если вставляем после последнего элемента
+        self.tail = newNode
 
 #2.6. Добавьте в класс LinkedList2 метод вставки узла самым первым элементом.
 #add_in_head(newNode)
@@ -117,7 +129,6 @@ class LinkedList2:
 
 
 #2.9. Напишите проверочные тесты для каждого из предыдущих заданий. 
-
 def test_linked_list2():
     
     # Тест 1: Создание и добавление элементов
@@ -189,6 +200,37 @@ def test_linked_list2():
     assert lst.head.value == 10
     assert lst.tail.value == 10
     print("Тест 9 пройден: вставка в пустой список")
+
+    # Тест 10: Комплексная проверка связей
+    lst.clean()
+    nodes = [Node(i) for i in range(5)]
+    for node in nodes:
+        lst.add_in_tail(node)
+    
+    # Проверка связей
+    assert lst.head == nodes[0]
+    assert lst.tail == nodes[-1]
+    for i in range(1, len(nodes)-1):
+        assert nodes[i].prev == nodes[i-1]
+        assert nodes[i].next == nodes[i+1]
+    print("Тест 10 пройден: комплексная проверка связей")
+
+    # Тест 11: Крайние случаи insert
+    lst.clean()
+    special_node = Node(999)
+    lst.insert(None, special_node)  # Вставка в пустой
+    assert lst.head == special_node
+    assert lst.tail == special_node
+    
+    new_head = Node(-1)
+    lst.insert(None, new_head)  # Вставка в конец непустого
+    assert lst.tail == new_head
+    print("Тест 11 пройден: крайние случаи insert")
+
+
+
+
+
 
 
     
