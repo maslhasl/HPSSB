@@ -122,9 +122,16 @@ def insert(self, afterNode, newNode):
     def len(self):
         count = 0
         node = self.head
-        while node is not None:
-            count+=1
+        max_nodes = 1000  # Защита от зацикливания
+    
+        while node is not None and count <= max_nodes:
+            if not isinstance(node, Node):  # Проверка типа
+                raise ValueError("Нарушена структура списка")
+            count += 1
             node = node.next
+    
+        if count > max_nodes:
+            raise ValueError("Возможен цикл в списке")
         return count
 
 
