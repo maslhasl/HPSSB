@@ -43,60 +43,59 @@ class LinkedList2:
 #2.3. и 2.4 Добавьте в класс LinkedList2 метод удаления одного узла по его значению - delete(val, all=False)
 #где флажок all=False по умолчанию -- удаляем только первый нашедшийся элемент. 
     def delete(self, val, all=False):
-        #Введем переменную текущего узла
+    #Удаляет узлы с указанным значением (безопасная версия)
         node = self.head
-        #Для прохождения по всем узлам списка воспользуемся циклом while
         while node is not None:
-            #Условие выполнения удаления
             if node.value == val:
-                node_next = node.next #Введем переменную для сохранения следующего узла
-                #Связи с предыдущим узлом
-                if node.prev is not None: #Случай не начала списка
+            # Сохраняем следующий узел перед изменением связей
+                next_node = node.next
+            
+            # Обновляем связи соседей
+                if node.prev is not None:
                     node.prev.next = node.next
-                else:                     #Случай начала списка
+                else:
                     self.head = node.next
-                #Связи со следующим узлом
-                if node.next is not None: #Случай не конца списка
+                
+                if node.next is not None:
                     node.next.prev = node.prev
-                else: #Случай конца списка
+                else:
                     self.tail = node.prev
-                if self.head is None:
-                    break
-                if not all: #Проверка: удалять первый найденный по значению узел или все 
-                    break
-                node = node_next #Присвоение переменной следующего по списку значения 
-            else: #Случай когда условие удаления не выполнено
+            
+                if not all:
+                    return  # Выходим после первого удаления
+                node = next_node  # Переходим к следующему узлу
+            else:
                 node = node.next
 #2.5. Добавьте в класс LinkedList2 метод вставки узла после заданного узла - insert(afterNode, newNode)
 #Если afterNode = None и список пустой, добавьте новый элемент первым в списке.
 #Если afterNode = None и список непустой, добавьте новый элемент последним в списке.
 def insert(self, afterNode, newNode):
+    """Вставляет узел после указанного (безопасная версия)"""
     if newNode is None:
-        return
+        return  # Игнорируем None
     
-    # Обработка случая when afterNode is None
+    # Вставка в конец списка
     if afterNode is None:
-        if self.head is None:  # Список пустой - делаем newNode единственным элементом
-            self.head = newNode
-            self.tail = newNode
-            newNode.prev = None
-            newNode.next = None
-        else:  # Список не пустой - добавляем в конец
+        if self.head is None:  # Список пуст
+            self.head = self.tail = newNode
+            newNode.prev = newNode.next = None
+        else:  # Вставка в конец непустого списка
             newNode.prev = self.tail
             newNode.next = None
             self.tail.next = newNode
             self.tail = newNode
         return
     
-    # Обработка обычной вставки после существующего узла
+    # Вставка в середину списка
     newNode.prev = afterNode
     newNode.next = afterNode.next
     afterNode.next = newNode
     
-    if newNode.next is not None:
-        newNode.next.prev = newNode
-    else:  # Если вставляем после последнего элемента
+    # Обновляем tail если вставили после последнего элемента
+    if newNode.next is None:
         self.tail = newNode
+    else:
+        newNode.next.prev = newNode
 
 #2.6. Добавьте в класс LinkedList2 метод вставки узла самым первым элементом.
 #add_in_head(newNode)
