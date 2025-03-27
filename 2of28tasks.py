@@ -69,33 +69,33 @@ class LinkedList2:
 #2.5. Добавьте в класс LinkedList2 метод вставки узла после заданного узла - insert(afterNode, newNode)
 #Если afterNode = None и список пустой, добавьте новый элемент первым в списке.
 #Если afterNode = None и список непустой, добавьте новый элемент последним в списке.
-def insert(self, afterNode, newNode):
+    def insert(self, afterNode, newNode):
     """Вставляет узел после указанного (безопасная версия)"""
-    if newNode is None:
-        return  # Игнорируем None
+        if newNode is None:
+            return  # Игнорируем None
     
     # Вставка в конец списка
-    if afterNode is None:
-        if self.head is None:  # Список пуст
-            self.head = self.tail = newNode
-            newNode.prev = newNode.next = None
-        else:  # Вставка в конец непустого списка
-            newNode.prev = self.tail
-            newNode.next = None
-            self.tail.next = newNode
-            self.tail = newNode
-        return
+        if afterNode is None:
+            if self.head is None:  # Список пуст
+                self.head = self.tail = newNode
+                newNode.prev = newNode.next = None
+            else:  # Вставка в конец непустого списка
+                newNode.prev = self.tail
+                newNode.next = None
+                self.tail.next = newNode
+                self.tail = newNode
+            return
     
     # Вставка в середину списка
-    newNode.prev = afterNode
-    newNode.next = afterNode.next
-    afterNode.next = newNode
+        newNode.prev = afterNode
+        newNode.next = afterNode.next
+        afterNode.next = newNode
     
     # Обновляем tail если вставили после последнего элемента
-    if newNode.next is None:
-        self.tail = newNode
-    else:
-        newNode.next.prev = newNode
+        if newNode.next is None:
+            self.tail = newNode
+        else:
+            newNode.next.prev = newNode
 
 #2.6. Добавьте в класс LinkedList2 метод вставки узла самым первым элементом.
 #add_in_head(newNode)
