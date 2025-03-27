@@ -1,23 +1,25 @@
-сlass Node:
-    def __init__(self, v):
+#2. Двунаправленный связный (связанный) список
+
+class Node:
+    def __init_(self, v):
         self.value = v
         self.prev = None
         self.next = None
-        
+
 class LinkedList2:
     def __init__(self):
         self.head = None
         self.tail = None
-        
+
     def add_in_tail(self, item):
-        if self.head is None:
+        if self.head is None: #То есть список пустой
             self.tail = item
             item.prev = None
             item.next = None
-        else:
+        else:                  #Список не пустой
             self.tail.next = item
             item.prev = self.tail
-        self.tail = item
+        self.tail = item       #После удаления связей, переприсваиваем хвосту новое значение
 
 #2.1. Добавьте в класс LinkedList2 метод поиска первого узла по его значению.
     def find(self, val):
@@ -27,16 +29,18 @@ class LinkedList2:
                 return node
             node = node.next
         return None
-# 2.2. Добавьте в класс LinkedList2 метод поиска всех узлов по конкретному значению (возвращается список найденных узлов).
+
+
+
     def find_all(self, val):
         result = []
-        node = self.head
+        node = node.head
         while node is not None:
             if node.value == val:
-                result.append(node.value)
+                result.append(node)
             node = node.next
-        return result
 
+# 2.2. Добавьте в класс LinkedList2 метод поиска всех узлов по конкретному значению (возвращается список найденных узлов).
 # 2.3. и 2.4 Добавьте в класс LinkedList2 метод удаления одного узла по его значению - delete(val, all=False)
 #где флажок all=False по умолчанию -- удаляем только первый нашедшийся элемент. 
 
