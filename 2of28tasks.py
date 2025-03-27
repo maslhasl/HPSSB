@@ -115,6 +115,7 @@ class LinkedList2:
             node = node.next
         return count
 
+
 #2.9. Напишите проверочные тесты для каждого из предыдущих заданий. 
 
 def test_linked_list2():
@@ -190,6 +191,7 @@ def test_linked_list2():
     print("Тест 9 пройден: вставка в пустой список")
 
 
+    
 
 
   
