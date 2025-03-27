@@ -1,7 +1,7 @@
 #2. Двунаправленный связный (связанный) список
 
 class Node:
-    def __init_(self, v):
+    def __init__(self, v):
         self.value = v
         self.prev = None
         self.next = None
@@ -33,11 +33,12 @@ class LinkedList2:
 # 2.2. Добавьте в класс LinkedList2 метод поиска всех узлов по конкретному значению (возвращается список найденных узлов).
     def find_all(self, val):
         result = []
-        node = node.head
+        node = self.head
         while node is not None:
             if node.value == val:
                 result.append(node)
             node = node.next
+        return result
 
 #2.3. и 2.4 Добавьте в класс LinkedList2 метод удаления одного узла по его значению - delete(val, all=False)
 #где флажок all=False по умолчанию -- удаляем только первый нашедшийся элемент. 
@@ -60,9 +61,8 @@ class LinkedList2:
                 else: #Случай конца списка
                     self.tail = node.prev
                 if not all: #Проверка: удалять первый найденный по значению узел или все 
-                    return
+                    break
                 node = node_next #Присвоение переменной следующего по списку значения 
-
             else: #Случай когда условие удаления не выполнено
                 node = node.next
 #2.5. Добавьте в класс LinkedList2 метод вставки узла после заданного узла - insert(afterNode, newNode)
@@ -95,7 +95,7 @@ class LinkedList2:
         #Случай пустого списка
         else:
             self.tail = newNode
-        self.head = NewNode
+        self.head = newNode
 
 #2.7. Добавьте в класс LinkedList2 метод очистки всего содержимого (создание пустого списка) -- clean()
     def clean(self):
@@ -111,6 +111,7 @@ class LinkedList2:
             node = node.next
         return count
 
+#2.9. Напишите проверочные тесты для каждого из предыдущих заданий. 
 
   
 
