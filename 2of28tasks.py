@@ -67,34 +67,32 @@ class LinkedList2:
 #Если afterNode = None и список пустой, добавьте новый элемент первым в списке.
 #Если afterNode = None и список непустой, добавьте новый элемент последним в списке.
     def insert(self, afterNode, newNode):
-    #Вставляет узел после указанного (безопасная версия)
-        if newNode is None:
-            return  # Игнорируем None
-    
-    # Вставка в конец списка
-        if afterNode is None:
-            if self.head is None:  # Список пуст
-                self.head = newNode
-                self.tail = newNode
-                newNode.prev = None
-                newNode.next = None
-            else:  # Вставка в конец непустого списка
-                newNode.prev = self.tail
-                newNode.next = None
-                self.tail.next = newNode
-                self.tail = newNode
-            return
-    
-    # Вставка в середину списка
-        newNode.prev = afterNode
-        newNode.next = afterNode.next
-        afterNode.next = newNode
-    
-    # Обновляем tail если вставили после последнего элемента
-        if newNode.next is None:
+        # Случай 1: Список пустой и afterNode = None
+        if self.head is None and afterNode is None:
+            self.head = newNode
             self.tail = newNode
+            newNode.prev = None
+            newNode.next = None
+            return
+
+        # Случай 2: Вставка в конец (afterNode = None, но список не пустой)
+        if afterNode is None:
+            newNode.prev = self.tail  # Новый узел ссылается на старый хвост
+            newNode.next = None       # Следующего узла нет (он последний)
+            self.tail.next = newNode  # Старый хвост ссылается на новый узел
+            self.tail = newNode       # Новый узел теперь хвост
+            return
+
+        # Случай 3: Вставка после заданного узла (afterNode не None)
+        newNode.prev = afterNode      # Новый узел ссылается на afterNode
+        newNode.next = afterNode.next # Новый узел ссылается на следующий после afterNode
+
+        if afterNode.next is not None: # Если afterNode не был хвостом
+            afterNode.next.prev = newNode  # Узел после afterNode теперь ссылается на newNode
         else:
-            newNode.next.prev = newNode
+            self.tail = newNode       # Если afterNode был хвостом, newNode теперь хвост
+
+        afterNode.next = newNode      # afterNode теперь ссылается на newNode
 
 #2.6. Добавьте в класс LinkedList2 метод вставки узла самым первым элементом.
 #add_in_head(newNode)
@@ -128,102 +126,70 @@ class LinkedList2:
 
 #2.9. Напишите проверочные тесты для каждого из предыдущих заданий. 
 def test_linked_list2():
-    
-    # Тест 1: Создание и добавление элементов
+    # Тест 1: Инициализация и add_in_tail
     lst = LinkedList2()
-    n1, n2, n3 = Node(1), Node(2), Node(3)
-    lst.add_in_tail(n1)
-    lst.add_in_tail(n2)
-    lst.add_in_tail(n3)
-    assert lst.head == n1
-    assert lst.tail == n3
-    assert lst.len() == 3
-    print("Тест 1 пройден: добавление в хвост")
+    lst.add_in_tail(Node(10))
+    lst.add_in_tail(Node(20))
+    lst.add_in_tail(Node(30))
+    assert lst.head.value == 10
+    assert lst.tail.value == 30
+    assert lst.head.next.value == 20
+    assert lst.tail.prev.value == 20
 
-    # Тест 2: Поиск элементов
-    assert lst.find(2) == n2
-    assert lst.find(99) is None
-    assert lst.find_all(2) == [n2]
-    print("Тест 2 пройден: поиск элементов")
+    # Тест 2: find (2.1)
+    found = lst.find(20)
+    assert found.value == 20
+    assert found.prev.value == 10
+    assert found.next.value == 30
+    assert lst.find(99) is None  # Несуществующее значение
 
-    # Тест 3: Удаление одного элемента
-    lst.delete(2)
-    assert lst.head == n1
-    assert lst.tail == n3
-    assert n1.next == n3
-    assert n3.prev == n1
-    assert lst.len() == 2
-    print("Тест 3 пройден: удаление одного элемента")
+    # Тест 3: find_all (2.2)
+    lst.add_in_tail(Node(20))  # Добавляем еще один 20
+    found_nodes = lst.find_all(20)
+    assert len(found_nodes) == 2
+    assert all(node.value == 20 for node in found_nodes)
+    assert lst.find_all(99) == []  # Несуществующее значение
 
-    # Тест 4: Удаление всех элементов
-    lst.add_in_tail(Node(2))
-    lst.add_in_tail(Node(2))
-    lst.delete(2, all=True)
-    assert lst.head == n1
-    assert lst.tail == n3
-    assert lst.len() == 2
-    print("Тест 4 пройден: удаление всех вхождений")
+    # Тест 4: delete (2.3-2.4)
+    lst.delete(20)  # Удаляем первый 20
+    assert lst.head.next.value == 30  # Теперь 10 -> 30 -> 20
+    assert lst.tail.prev.value == 30
 
-    # Тест 5: Удаление единственного элемента
-    lst2 = LinkedList2()
-    n = Node(1)
-    lst2.add_in_tail(n)
-    lst2.delete(1)
-    assert lst2.head is None
-    assert lst2.tail is None
-    print("Тест 5 пройден: удаление единственного элемента")
+    lst.delete(20, all=True)  # Удаляем все 20
+    assert lst.tail.value == 30  # Теперь только 10 -> 30
 
-    # Тест 6: Вставка элементов
-    lst.insert(n1, Node(1.5))
-    assert lst.head.next.value == 1.5
-    lst.insert(None, Node(4))  # Вставка в конец
-    assert lst.tail.value == 4
-    print("Тест 6 пройден: вставка элементов")
+    # Тест 5: insert (2.5)
+    lst.insert(None, Node(40))  # Вставка в конец
+    assert lst.tail.value == 40
+    assert lst.tail.prev.value == 30
 
-    # Тест 7: Вставка в голову
-    lst.add_in_head(Node(0))
-    assert lst.head.value == 0
-    assert lst.head.next == n1
-    print("Тест 7 пройден: вставка в голову")
+    lst.insert(lst.head, Node(15))  # Вставка после головы
+    assert lst.head.next.value == 15
+    assert lst.head.next.next.value == 30
 
-    # Тест 8: Очистка списка
+    # Тест 6: add_in_head (2.6)
+    lst.add_in_head(Node(5))
+    assert lst.head.value == 5
+    assert lst.head.next.value == 10
+
+    # Тест 7: clean (2.7)
     lst.clean()
     assert lst.head is None
     assert lst.tail is None
-    assert lst.len() == 0
-    print("Тест 8 пройден: очистка списка")
 
-    # Тест 9: Вставка в пустой список
-    lst.insert(None, Node(10))
-    assert lst.head.value == 10
-    assert lst.tail.value == 10
-    print("Тест 9 пройден: вставка в пустой список")
+    # Тест 8: len (2.8)
+    lst.add_in_tail(Node(100))
+    lst.add_in_tail(Node(200))
+    assert lst.len() == 2
 
-    # Тест 10: Комплексная проверка связей
-    lst.clean()
-    nodes = [Node(i) for i in range(5)]
-    for node in nodes:
-        lst.add_in_tail(node)
-    
-    # Проверка связей
-    assert lst.head == nodes[0]
-    assert lst.tail == nodes[-1]
-    for i in range(1, len(nodes)-1):
-        assert nodes[i].prev == nodes[i-1]
-        assert nodes[i].next == nodes[i+1]
-    print("Тест 10 пройден: комплексная проверка связей")
+    # Тест 9: Особые случаи
+    empty_lst = LinkedList2()
+    empty_lst.insert(None, Node(1))  # Вставка в пустой список
+    assert empty_lst.head.value == 1
+    assert empty_lst.tail.value == 1
 
-    # Тест 11: Крайние случаи insert
-    lst.clean()
-    special_node = Node(999)
-    lst.insert(None, special_node)  # Вставка в пустой
-    assert lst.head == special_node
-    assert lst.tail == special_node
-    
-    new_head = Node(-1)
-    lst.insert(None, new_head)  # Вставка в конец непустого
-    assert lst.tail == new_head
-    print("Тест 11 пройден: крайние случаи insert")
+    empty_lst.delete(1)
+    assert empty_lst.head is None
 
 
 
