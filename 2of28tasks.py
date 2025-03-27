@@ -42,7 +42,27 @@ class LinkedList2:
 
 #2.3. и 2.4 Добавьте в класс LinkedList2 метод удаления одного узла по его значению - delete(val, all=False)
 #где флажок all=False по умолчанию -- удаляем только первый нашедшийся элемент. 
+    def delete(self, val, all=False):
+        node = self.head  # Начинаем с головы списка
+    
+        while node is not None:  # Пока не дошли до конца
+            if node.value == val:  # Если нашли нужное значение
+                # Случай 1: Удаляемый узел — это голова (нет предыдущего)
+                if node.prev is None:  
+                    self.head = node.next  # Головой становится следующий узел
+                else:
+                    node.prev.next = node.next  # Иначе "перепрыгиваем" удаляемый узел
 
+                # Случай 2: Удаляемый узел — это хвост (нет следующего)
+                if node.next is None:  
+                    self.tail = node.prev  # Хвостом становится предыдущий узел
+                else:
+                    node.next.prev = node.prev  # Иначе "перепрыгиваем" удаляемый узел
+
+                if not all:  # Если нужно удалить только первый найденный — выходим
+                    return  
+        
+            node = node.next  # Переходим к следующему узлу
 #2.5. Добавьте в класс LinkedList2 метод вставки узла после заданного узла - insert(afterNode, newNode)
 #Если afterNode = None и список пустой, добавьте новый элемент первым в списке.
 #Если afterNode = None и список непустой, добавьте новый элемент последним в списке.
