@@ -63,8 +63,10 @@ class DynArray:
         self.array[self.count] = None #Очистка последнего элемента, после сдвига
 
         #Уменьшение capacity массива
-        if self.count < self.capacity//2:
-            self.resize(self.count)
+        if self.count < self.capacity/2:
+            new_capacity = max(16, int(self.capacity / 1.5))
+            if new_capacity != self.capacity:
+                self.resize(new_capacity)
         # удаляем объект в позиции i
 
 #В обоих случаях, если индекс i лежит вне допустимых границ, генерируйте исключение.
