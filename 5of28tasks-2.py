@@ -1,4 +1,6 @@
 #Очередь.
+from logging import exception
+
 
 #Реализуем очередь с помощью связного списка
 class Queue_Node:
@@ -132,5 +134,43 @@ class _2stacks_queue:
 
 #6.* Реализуйте круговую (циклическую буферную) очередь статическим массивом фиксированного размера. Добавьте ей метод проверки, полна ли она (при этом добавление новых элементов невозможно).
 #Обеспечьте эффективное управление указателями начала и конца очереди в рамках массива, чтобы избежать неоправданных сдвигов данных. 
+class CircularQueue:
+    def __init__(self, capacity):
+        self.capacity = capacity # ёмкость очереди: задается внешне, фиксирована
+        self.size = 0 # текущий размер очереди
+        self.head = 0 # начало очереди
+        self.tail = 0 # конец очереди
+        self.queue = [None]*capacity # массив, определяемый ёмкостью
+
+    def is_full(self): # проверка на заполненность очереди
+        return self.size == self.capacity
+    def is_empty(self): # проверка на пустую очередь
+        return self.size == 0
+
+    def enqueue_circle(self, item): # добавляем новый элемент в очередь
+        if self.is_full():
+            raise exception("Очередь заполнена, добавление элементов невозможно.")
+        self.queue[self.tail] = item
+        self.tail = (self.tail + 1) % self.capacity
+        self.size += 1
+
+    def dequeue_circle(self): # отдаем первый добавленный элемент и удаляем его
+        if self.is_empty():
+            raise exception("Очередь пуста, удаление элемента невозможно.")
+        item = self.queue[self.head]
+        self.queue[self.head] = None
+        self.head = (self.head + 1) % self.capacity
+        self.size -= 1
+        return item
+
+    def peek_circle(self): # отдаем элемент без удаления
+        if self.is_empty():
+            return None
+        result = self.queue[self.head]
+        return result
+
+
+
+
 
 
