@@ -66,29 +66,71 @@ class Queue:
         for i in range(n):
             element = self.dequeue()
             self.enqueue(element)
+# 5.* Добавьте функцию, которая обращает все элементы в очереди в обратном порядке.
 
-        #Случай когда очередь равна шагу вращения
-        #с помощью цикла осуществляем перемещение элементов очереди.
-# q = Queue()
-# q.enqueue('first')
-# q.enqueue('second')
-# q.enqueue('third')
-# print('до смещения:')
-# print(q.dequeue())
-# print(q.dequeue())
-# print(q.dequeue())
-# print('после смещения:')
-# q.enqueue('first')
-# q.enqueue('second')
-# q.enqueue('third')
-# q.enqueue_rotate(-1)
-# print(q.dequeue())
-# print(q.dequeue())
-# print(q.dequeue())
+    def reverse(self):
+        stack = Stack() # воспользуемся классом стек и используем архитектуру стека
+        while self.size() > 0: # заполним стек элементами из очереди
+            stack.push(self.dequeue())
+        while stack.size() > 0: # вернем элементы в очередь из стека, но уже в обратном порядке
+            self.enqueue(stack.pop())
+
+
 
 #4.* Реализуйте очередь с помощью двух стеков.
 
-#5.* Добавьте функцию, которая обращает все элементы в очереди в обратном порядке.
+#Введем класс стека и методы к нему
+class Stack:
+    def __init__(self):  # Оставляю метод без изменений, как указано в заготовке. Надеюсь это не ошибка.
+        self.stack = []
+
+    # 1. Подберите подходящую динамическую структуру данных для хранения стека. Реализуйте методы size(), pop(), push() и peek().
+    # Добавьте тесты для каждого из этих четырёх методов.
+    # Оцените меру сложности для операций pop и push.
+
+    def size(self):  # Оставляю метод без изменений, как указано в заготовке. Надеюсь это не ошибка.
+        return len(self.stack)
+
+    def pop(self):
+        if self.size() != 0:  # если стек не пустой
+            result = self.stack[-1]  # используя возможности списка обращаемся сразу к последнему элементу стека
+            self.stack = self.stack[:-1]  # пересохраняем стек без последнего элемента с помощью среза
+            return result
+        return None  # если стек пустой
+
+    def push(self, value):
+        self.stack.append(value)  # используем имеющийся метод добавления в конец списка, тк для стека использую тип данных python list
+
+    def peek(self):
+        if self.size() != 0:  # если стек не пустой
+            result = self.stack[-1]
+            return result
+        return None  # если стек пустой
+# Введем класс очереди на двух стеках и методы к нему с использованием методов класса стека
+class _2stacks_queue:
+    def __init__(self): #Создаем очередь на двух стеках
+        self.stack_in = Stack()
+        self.stack_out = Stack()
+
+    def size_2s(self):
+        return self.stack_in.size() + self.stack_out.size()
+
+    def enqueue_2s(self, item): # Метод добавления элементов
+        # Используем метод добавления из класса стека
+        self.stack_in.push(item)
+
+    def dequeue_2s(self):
+        # Введем проверку на наличие элементов в стеках
+        if self.stack_in.size() == 0 and self.stack_out.size() == 0:
+            return None # случай когда возвращать нечего
+        # Перенос элементов только в случае если стек out пуст
+        if self.stack_out.size() == 0:
+            while self.stack_in.size() > 0:
+                self.stack_out.push(self.stack_in.pop())
+        # отдаем верхний элемент out стека
+        return self.stack_out.pop()
 
 #6.* Реализуйте круговую (циклическую буферную) очередь статическим массивом фиксированного размера. Добавьте ей метод проверки, полна ли она (при этом добавление новых элементов невозможно).
 #Обеспечьте эффективное управление указателями начала и конца очереди в рамках массива, чтобы избежать неоправданных сдвигов данных. 
+
+
