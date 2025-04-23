@@ -69,7 +69,7 @@ class OrderedList:
                 return # выход, если выполнилось условие -1/0
             # Переход к новому элементу при невыполнении условия
             current = current.next
-        # Если цикл завершился, то есть дошли до конца (
+        # Если цикл завершился, то есть дошли до конца
         new_node.prev = self.tail
         self.tail.next = new_node
         self.tail = new_node
@@ -92,14 +92,41 @@ class OrderedList:
 # независимо от того, сколько одинаковых элементов по значению.
 
     def delete(self, val):
-        pass # здесь будет ваш код
+        # Если список пустой выходим из метода
+        if self.head is None:
+            return
+        current = self.head
+        while current:
+            cmp_result = self.compare(val, current.value)
+        # Условие в случае нахождения элемента для удаления
+            if cmp_result == 0:
+                if current.prev:
+                    current.prev.next = current.next
+                else: # если удаляем голову
+                    self.head = current.next
+                if current.next:
+                    current.next.prev = current.prev
+                else: # если удаляем хвост
+                    self.tail = current.prev
+                return # выходим из метода после удаления первого подходящего элемента
+            if cmp_result < 0:
+                return
+            current = current.next
+
 
     def clean(self, asc):
+        self.head = None
+        self.tail = None
         self.__ascending = asc
-        pass # здесь будет ваш код
+
 
     def len(self):
-        return 0 # здесь будет ваш код
+        count = 0
+        current = self.head
+        while current:
+            count+=1
+            current = current.next
+        return count # здесь будет ваш код
 
     def get_all(self):
         r = []
