@@ -1,12 +1,13 @@
 # 7. Упорядоченный список
 
-# Реализуйте:
 
 class Node:
     def __init__(self, v):
         self.value = v
         self.prev = None
         self.next = None
+
+# Реализуйте:
 
 #1. Дополнительную опцию asc в конструкторе OrderedList, которая указывает,
 # по возрастанию (True) или по убыванию (False)
@@ -17,7 +18,7 @@ class OrderedList:
     def __init__(self, asc):
         self.head = None
         self.tail = None
-        self.__ascending = asc
+        self.__ascending = asc #  приватное поле с порядком сортировки в зависимости от значения asc
 
 # 2. Метод сравнения двух значений compare().
 # В общем случае, мы можем хранить в нашем списке произвольные объекты (например, экземпляры класса Cat),
@@ -25,10 +26,15 @@ class OrderedList:
 # Пока сделайте базовый вариант этого метода, который сравнивает числовые значения.
 
     def compare(self, v1, v2):
-        return 0
-        # -1 если v1 < v2
-        # 0 если v1 == v2
-        # +1 если v1 > v2
+        # если элементы идентичны
+        if v1 == v2:
+            return 0
+        # если порядок и элементы соответствуют условиям сортировки
+        if (v1 < v2 and self.__ascending) or (v1 > v2 and not self.__ascending):
+            return -1
+        # в случае когда порядок и элементы не соответствуют условиям сортировки
+        else:
+            return 1
 
 # 3. Добавление нового элемента по значению add() с единственным параметром -- новым добавляемым значением
 # (новый узел для него создавайте внутри метода add).
@@ -37,15 +43,50 @@ class OrderedList:
 # Используйте для этого метод сравнения значений из предыдущего пункта.
 
     def add(self, value):
-        pass
-        # автоматическая вставка value
-        # в нужную позицию
+        # Создаем новый узел
+        new_node = Node(value)
+        # Случай когда список пустой
+        if self.head is None:
+            self.head = new_node
+            self.tail = new_node
+            return
+        # Случай когда список не пустой
+        current = self.head # текущий элемент списка, с ним будем сравнивать
+        while current: # Пока current не None цикл будет выполняться
+            cmp_result = self.compare(value, current.value)
+            if cmp_result <= 0:
+                # Добавление элемента перед current в asc/desc случаях
+                # Связываем новый элемент с текущими
+                new_node.prev = current.prev
+                new_node.next = current
+                # Если не голова списка
+                if current.prev:
+                    current.prev.next = new_node
+                else: # Если голова списка
+                    self.head = new_node
+                # новая связь текущего с новым предыдущим
+                current.prev = new_node
+                return # выход, если выполнилось условие -1/0
+            # Переход к новому элементу при невыполнении условия
+            current = current.next
+        # Если цикл завершился, то есть дошли до конца (
+        new_node.prev = self.tail
+        self.tail.next = new_node
+        self.tail = new_node
 
 # 6. Переделайте функцию поиска элемента по значению с учётом признака упорядоченности и возможности раннего прерывания поиска,
 # если найден заведомо больший или меньший элемент, нежели искомый. Оцените сложность операции поиска, изменилась ли она?
 
     def find(self, val):
-        return None # здесь будет ваш код
+        current = self.head
+        while current:
+            cmp_result = self.compare(val, current.value)
+            if cmp_result == 0:
+                return current
+            if cmp_result < 0:
+                return None
+            current = current.next
+        return  None
 
 # 4. Удаление самого первого (одного) элемента по значению: delete(),
 # независимо от того, сколько одинаковых элементов по значению.
