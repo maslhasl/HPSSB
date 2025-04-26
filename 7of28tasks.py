@@ -242,3 +242,4 @@ def test_ordered_string_list():
     desc_str.clean(True)  # Меняем на сортировку по возрастанию
     assert desc_str.len() == 0, "После clean() список должен быть пустым"
 
+
