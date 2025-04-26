@@ -144,9 +144,101 @@ class OrderedStringList(OrderedList):
     def __init__(self, asc):
         super(OrderedStringList, self).__init__(asc)
 
+    def custom_strip(self, v):
+        whitespace_chars = {' ', '\t', '\n', '\r', '\v', '\f'}
+        start = 0
+        while start < len(v):
+            if v[start] not in whitespace_chars:
+                break
+            start += 1
+        end = len(v) - 1
+        while end >= 0:
+            if v[end] not in whitespace_chars:
+                break
+            end -= 1
+        if start > end:
+            return ""
+        return v[start:end + 1]
+
     def compare(self, v1, v2):
-        # переопределённая версия для строк
-        return 0
+        if type(v1) is str:
+            str1 = v1
+        else:
+            str1 = str(v1)
+        if type(v2) is str:
+            str2 = v2
+        else:
+            str2 = str(v2)
+        cleaned1 = self.custom_strip(str1)
+        cleaned2 = self.custom_strip(str2)
+
+        return super().compare(cleaned1, cleaned2)
 
 #7. Добавьте тесты для добавления, удаления и поиска элемента по его значению
 # -- каждый случай с учётом признака упорядоченности.
+
+# Тесты для OrderedList (числа)
+def test_ordered_list():
+
+    # Тест 1: Добавление по возрастанию
+    asc_list = OrderedList(True)
+    asc_list.add(3)
+    asc_list.add(1)
+    asc_list.add(2)
+    values = [node.value for node in asc_list.get_all()]
+    assert values == [1, 2, 3], f"Ожидается [1, 2, 3], получено {values}"
+
+    # Тест 2: Добавление по убыванию
+    desc_list = OrderedList(False)
+    desc_list.add(3)
+    desc_list.add(1)
+    desc_list.add(2)
+    values = [node.value for node in desc_list.get_all()]
+    assert values == [3, 2, 1], f"Ожидается [3, 2, 1], получено {values}"
+
+    # Тест 3: Поиск элемента
+    assert asc_list.find(2).value == 2, "Должен найти 2"
+    assert asc_list.find(5) is None, "Не должен найти 5"
+
+    # Тест 4: Удаление элемента
+    asc_list.delete(2)
+    values = [node.value for node in asc_list.get_all()]
+    assert values == [1, 3], f"После удаления ожидается [1, 3], получено {values}"
+
+    # Тест 5: Длина списка
+    assert asc_list.len() == 2, f"Ожидается длина 2, получено {asc_list.len()}"
+
+
+# Тесты для OrderedStringList (строки)
+def test_ordered_string_list():
+
+    # Тест 1: Добавление строк по возрастанию (без учета пробелов)
+    asc_str = OrderedStringList(True)
+    asc_str.add("  banana")
+    asc_str.add("apple  ")
+    asc_str.add("  orange ")
+    values = [node.value for node in asc_str.get_all()]
+    assert values == ["apple  ", "  banana", "  orange "], f"Ожидается ['apple', 'banana', 'orange'], получено {values}"
+
+    # Тест 2: Добавление строк по убыванию
+    desc_str = OrderedStringList(False)
+    desc_str.add("  banana")
+    desc_str.add("apple  ")
+    desc_str.add("  orange ")
+    values = [node.value for node in desc_str.get_all()]
+    assert values == ["  orange ", "  banana", "apple  "], f"Ожидается ['orange', 'banana', 'apple'], получено {values}"
+
+    # Тест 3: Поиск строк (без учета пробелов)
+    assert desc_str.find("banana").value == "  banana", "Должен найти banana"
+    assert desc_str.find("  banana").value == "  banana", "Должен найти banana с пробелами"
+    assert desc_str.find("mango") is None, "Не должен найти mango"
+
+    # Тест 4: Удаление строк
+    desc_str.delete("banana")
+    values = [node.value for node in desc_str.get_all()]
+    assert values == ["  orange ", "apple  "], f"После удаления ожидается ['orange', 'apple'], получено {values}"
+
+    # Тест 5: Очистка списка
+    desc_str.clean(True)  # Меняем на сортировку по возрастанию
+    assert desc_str.len() == 0, "После clean() список должен быть пустым"
+
